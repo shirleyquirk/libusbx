@@ -2513,6 +2513,10 @@ static int op_handle_events(struct libusb_context *ctx,
 		}
 
 		if (pollfd->revents & POLLERR) {
+			if (!hpriv) {
+				// Already closed
+				continue;
+			}
 			usbi_remove_pollfd(HANDLE_CTX(handle), hpriv->fd);
 			usbi_handle_disconnect(handle);
 			/* device will still be marked as attached if hotplug monitor thread
